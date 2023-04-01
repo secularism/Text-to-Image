@@ -1,0 +1,91 @@
+# DF-GAN: A Simple and Effective Baseline for Text-to-Image Synthesis
+
+## 作者：Ming Tao1 Hao Tang、Fei Wu1 Xiaoyuan Jing、Bing-Kun Bao、Changsheng Xu 时间：2020年
+
+## 会议/期刊：CVPR
+
+## 为什么提出DFGAN：
+
+- 从文本描述中合成高质量的真实图像是一项具有挑战性的任务。现有的文本到图像生成对抗网络通常采用堆叠式架构作为主干，但仍存在三个缺陷。
+
+  1）堆叠结构引入了不同图像尺度的生成器之间的纠缠，使得最终优化的图像看起来像是模糊形状和一些细节的简单组合。
+
+  2）现有研究倾向于在对抗性学习中应用和修复额外的网络，以实现文本-图像语义一致性。但这会使这些网络很容易被生成器愚弄，从而合成对抗特征，从而失去对语义一致性的监督能力。（比如AttnGAN的DAMSM、MirrorGAN的镜像结构等）
+
+  3）采用的基于跨模态注意的文本图像融合不能充分利用文本信息。由于计算量大，它们只能在64×64和128×128图像特征上应用两次。它限制了文本图像融合过程的有效性，使得该模型难以扩展到更高分辨率的图像合成。
+
+## DFGAN提出了哪些方法：
+
+- 基于上述的问题，DFGAN提出三个方法进行解决：
+
+  1）对于第一个问题，该文将堆叠主干替换为一级主干，它由hing loss和residual network组成，它们稳定了GAN的训练过程，可以直接合成高分辨率图像。且由于一级主干中只有一个生成器，因此避免了不同生成器之间的纠缠。
+  
+  2）对于第二个问题，作者设计了一个由匹配感知梯度惩罚（MA-GP）和单向输出组成的目标感知鉴别器，以增强文本图像的语义一致性。MA-GP是一种基于鉴别器的正则化策略。它追求目标数据（真实和文本匹配图像）上鉴别器的梯度为零。
+  
+  3）对于第三个问题，作者提出了一种深度文本图像融合块（DFBlock），以更有效地将文本信息融合到图像特征中。
+
+- 贡献：
+
+  1）提出MA-GP和单项输出组成的新的目标感知鉴别器。在不引入额外网络的情况下显著增强了文本图像的语义一致性。
+
+  2）提出了一种DFBlock。更有效、更深入地将文本和视觉特征充分融合。
+
+  3）在两个具有挑战性的数据集上进行的大量定性和定量实验表明，DFGAN优于现有的最先进的文本到图像模型。
+
+## DFGAN模型：
+
+- DFGAN由一个生成器、一个鉴别器和一个预训练文本编码器组成，如下图所示：
+
+  ![image-20220605163659109](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220605163659109.png)
+
+  可以看到，该模型有两个输入，一个是由文本编码器编码的句子向量，另一个是从高斯分布采样的噪声向量，以确保生成的图像的多样性。先是把噪声向量输入到FC层进行维度的整形，然后应用一系列的UPBlock 对特征进行上采样得到图像特征（UPBlock由上采样、残差块和DFBlock组成，其用于图像生成过程中融合文本和图像特征），最后卷积层将图像特征转换为图像。鉴别器的过程与之相反，采用DownBlock将图像转换为图像特征。然后将句子和特征进行复制连接。然后adversarial loss将会被预测，以用来评估输入的视觉真实性和语义一致性。
+
+### 1 One-Stage Text-to-Image Backbone：
+
+- 因为GAN模型的不稳定性，之前的工作常采用堆叠结构从低分辨率图像生成高分辨率图像，但是堆叠结构再不同的生成器之间引入了纠缠，因此该文受无条件图像生成的研究的启发，提出了一种单极文本到图像的backbone，且利用铰链损失来稳定对抗性的过程，因为使用了单级生成器直接从噪声生成高质量图像，因此它必须包含比堆叠结构中以前的生成器更多的层，作者在这里引入了残差结构，用于稳定深层次网络的训练。
+
+### 2 Target-Aware Discriminator：
+
+- 目标感知鉴别器，是由匹配感知梯度惩罚和单向输出组成，用于促进生成器合成更真实和文本图像语义一致的图像.
+
+#### 2.1  Matching-Aware Gradient Penalty:
+
+- ![image-20220614155630708](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220614155630708.png)
+- 如上图所示，在无条件图像生成中，目标数据（真实图像）对应于低鉴别器损耗。相应地，合成图像对应于高鉴别器损耗。铰链损耗将鉴别器损耗范围限制在-1和1之间。对真实数据的梯度惩罚将减少真实数据点及其附近的梯度。梯度越大，惩罚越大。
+- ![image-20220615132920361](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615132920361.png)
+
+#### 2.2 One-Way Output：
+
+- ![image-20220615131327685](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615131327685.png)
+- 如上图所示，在文本到图像生成中，鉴别器提供四种输入：具有匹配文本的合成图像（fake，match），具有不匹配文本的合成图像（fake，mismatch），具有匹配文本的真实图像（real，match），具有不匹配文本的真实图像（real，mismatch）。
+- **其中无条件损失是指判别图像是真是假，图中用$\beta$表示，有条件是指判别文本和图像是否一致，图中用$\alpha$表示**。我们生成 不匹配文本的合成图像时，当使用Two-Way Output会向$\alpha$和$\beta$的方向进行更新。但是就像图中所表示的一样，Two-Way Output只会简单的将二者相加，这样的过程只会减慢生成器的收敛速度。
+- 因此作者提出One-Way Output。如下图，鉴别器将图像特征和句子向量连接起来，然后通过两个卷积层仅输出一个对抗性损失。通过单向输出，可以使得单个梯度$\gamma$直接指向目标数据点（也就是（real，match））从而优化和加速生成器的收敛。
+- ![image-20220615132948048](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615132948048.png)
+
+### 3.Efficient Text-Image Fusion：
+
+- ![image-20220615133217739](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615133217739.png)
+
+- 其中UPBlock是由上采样、残差块和DFBlock组成，如图(a)。DFBlock如图(b)由Affine模块、ReLu以及卷积组成。Affine模块如图(c)：采用两个MLP分别从句子向量e中去预测通道尺度参数$\gamma$和移位参数$\theta$。
+
+  > $\gamma=MLP_1(e)$  $\theta=MLP_2(e)$
+
+  当给定的输入特征X时，使用如下公式对齐进行计算：
+
+  > $AFF(x_i|e)=\gamma_i \cdot x_i + \theta_i$
+
+  这里$x_i$是特征图的第$i$个通道，$e$是句子向量。值得注意的是：**Aff层扩展生成器的条件表示空间，但是仿射变换是每个通道的线性变换。这限制了文本图像融合过程的有效性，因此需要在其之间加入激活函数。将非线性引入融合过程中**。
+
+- DFBlock促进了多样性，并根据不同的文本描述，扩展表示空间来表示不同的视觉特征。随着融合过程的深入，其带来了两个好处：
+
+  1）它使生成器在融合文本和图像特征时更充分地利用文本信息。
+
+  2）加深融合过程可以扩大融合模块的表示空间，有利于从不同的文本描述中生成语义一致的图像。
+
+  此外，之前的文本生成图像多考虑图像尺度的限制，这是因为它们通常采用跨模态注意机制，问题在于：随着图像大小的增加，计算成本会快速增长。（上图（d）中展示了不同的不同生成器之间的效果）。
+
+## 实验：
+
+- 该实验在CUB和COCO数据上评估模型，选择IS和FID来评估网络性能。因为IS无法在COCO数据集上很好地评估图像质量，且在COCO数据集上，一些基于GAN模型实现的IS显著高于Transformer-based的文本生成图像模型，但合成图像的视觉质量明显低于Transformer-based模型。因此作者不比较COCO数据集上的IS。此外还评估了参数数量（NoP），以比较模型大小与当前方法。
+- ![image-20220615171115375](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615171115375.png)
+- 可以看出DFGAN的参数数量更少，但是效果更明显
