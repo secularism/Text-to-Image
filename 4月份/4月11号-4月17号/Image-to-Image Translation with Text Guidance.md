@@ -22,7 +22,7 @@
 
 * 与目前的I2I转换模型不同，它需要细粒度的像素标记语义图像来决定**生成什么**。如下图所示，给定一个简单的圆形分割蒙版，该模型可以生成一个草地区域的停车标志，也可以生成一个奶酪和意大利辣香肠披萨。
 
-  ![image-20220414112618028](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220414112618028.png)
+  ![image-20220414112618028](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220414112618028.png)
 
 * 要实现这一点，关键是要将文本描述和图像中所包含的不同视觉属性完全理清，然后在语义词和对应的视觉属性之间建立精确的关联，实现有效的控制，并且如何在更困难的数据集上有效地生成涉及不同模态表示的逼真图像也是一个需要解决的关键问题，**其中数据集中的每一幅图像都有多个彼此之间具有复杂关系的对象**。
 
@@ -38,7 +38,7 @@
 
 ## 模型结构：
 
-* ![image-20220414113524108](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220414113524108.png)
+* ![image-20220414113524108](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220414113524108.png)
 
 * 该模型采用ControlGAN作为基本框架。
 
@@ -54,7 +54,7 @@
 
 * POS以文本描述作为输入，给每个单词贴上相应的标签：
 
-  ![image-20220414125958768](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220414125958768.png)
+  ![image-20220414125958768](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220414125958768.png)
 
 * 这里的\*代表任何元素出现零次或多次，NN\*表示所有名词的不同形式，IN\*表示介词或从属连词，VB\*表示所有形式的动词，JJ\*表示所有的形容词，在模型中，只保留这些特定的词。因为名词、介词和动词已经抓住了句子的主要意思，而形容词包含了对图像视觉属性的主要描述。
 
@@ -86,11 +86,11 @@
 
 * 该multi-stage每一级有一个发生器和一个鉴别器，逐步生成不同尺度的图像，合成图像的分辨率是前一幅图像的**4倍**，为了生成一个完整的结构与细节，作者向低层次的discriminator送入了高层次的real和fake图片块，这些图片块包含看不见但却精细的细节，可以作为额外信息来帮助训练低层次discriminator的辨别能力，从而反过来训练generator生成更精细的图片，特别是第一阶段的generator。因此，第$i$阶段discriminator的额外无条件对抗损失$L_{Z_{Di}}$定义为：
 
-  > ![image-20220415110733313](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220415110733313.png)
+  > ![image-20220415110733313](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220415110733313.png)
 
   上式中$K$是总阶段数，$P^`_K$和$P_k$分别为合成图像$I^`_k$和真实图像$I_k$在较高阶段$k$时的随机patch，$P^`_K$和$P_k$的大小匹配discriminator $D_i$的输入要求。第$i$阶段generator的额外无条件对抗损失$L_{Z_{Gi}}$定义为
 
-  > ![image-20220415110905375](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220415110905375.png)
+  > ![image-20220415110905375](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220415110905375.png)
 
   这里$i>1$，$P^`_K$是第$i$级合成图像$I_i^`$的一个非分离的随机patch。$P^`_K$的裁剪大小与discriminator$D_k$的输入要求相匹配。
 
@@ -102,13 +102,13 @@
 
 * 为了进一步提高鉴别器的鉴别能力，作者提出了一种新的结构损失，它也可以用来稳定训练。它可以使用所提供的分割蒙版来分离合成图像和真实图像上的对象和背景。然后根据不同的对象和背景创建出新的成分（这里不同的背景和对象，分为真假背景和真假对象），也就是说创建假的对象+真实背景或是真实对象+假的背景，并将他们输入feed到discriminator中以提升改善他们的鉴别能力，比如识别生成图像如果存在一些不切实际的背景。反过来，也可以鼓励生成器在任何地方生成更精细的细节，而不是只专注于生成真实对象或背景。因此，第$i$阶段的损失$L_{S_i}$为：
 
-  > ![image-20220415145416601](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220415145416601.png)
+  > ![image-20220415145416601](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220415145416601.png)
 
   其中，$X_i^1$表示由带有真实背景的假物体组成的新图像，$X_i^2$表示阶段$i$带有假背景的真实物体。
 
 ## 实验：
 
-* ![image-20220415145758325](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220415145758325.png)
+* ![image-20220415145758325](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220415145758325.png)
 
 * 上图代表与在COCO数据上与最先进的方法作定量比较，
 
@@ -124,7 +124,7 @@
 
 * 可以看到RefinedGAN的效果更好，并且具有较高的多样性。其中R-prcn值越高，说明我们的模型生成的合成图像与给定的文本描述高度匹配。
 
-* ![image-20220415150552609](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220415150552609.png)
+* ![image-20220415150552609](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220415150552609.png)
 
 * 上图表示三种方法在COCO数据集上的定性比较
 
@@ -136,24 +136,24 @@
 
   4）g和h表明，该模型还能控制生成结果的全局风格。
 
-* ![image-20220415151048245](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220415151048245.png)
+* ![image-20220415151048245](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220415151048245.png)
 * 图4则表明如果没有提供segmentation mask，模型只生成background，但是结果仍然在语义上匹配给定的描述。这说明有效的解开了前景和背景。
 
 ## Ablation Studies:
 
 ### Necessity of part-of-speech tagging.（词性标注的必要性）：
 
-* ![image-20220415151256522](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220415151256522.png)
+* ![image-20220415151256522](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220415151256522.png)
 * 如图6所示，当从描述中去除非语义词时，合成图像中的一些区域就变得不现实了，比如公交车上出现了一个明显的斑痕，另外无用的文字甚至会降低合成结果的质量，比如会降低蓝天的亮度，影响色彩斑斓的风筝的质感。
 
 ### Effectiveness of affine combination module（ACM模块的有效性）：
 
-* ![image-20220415151519942](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220415151519942.png)
+* ![image-20220415151519942](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220415151519942.png)
 * 如图5c和f所示，可以明显的看出，采用拼接而不是ACM来结合不同的模态特征，模型不能产生更精细的真实图像，甚至不能保持给定描述的语义一致性。这主要是因为简单的拼接并不能将语义词与图像对应区域建立准确的连接，也不能将可控的文本描述有效地编码到生成过程中。
 
 ### Effectiveness of refined multi-stage architecture（精炼multi-stage的有效性）：
 
-* ![image-20220415151801039](D:\workplace\note\4月份\4月11号-4月17号\Image-to-Image Translation with Text Guidance_img\image-20220415151801039.png)
+* ![image-20220415151801039](./Image-to-Image%20Translation%20with%20Text%20Guidance_img/image-20220415151801039.png)
 * 如图7所示，可以很清楚的没有renfined multi-stage的模型在第一阶段（c图）比有的（f图）少了很多精细的部分，此外，后续阶段的生成器无法完成缺失的内容或纠正不合适的属性。
 
 ### Effectiveness of structure loss（结构损失的有效性）：

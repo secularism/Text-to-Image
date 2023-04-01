@@ -14,8 +14,8 @@
 
 * 在CGAN的论文中，网络架构使用的MLP（全连接网络）。在CGAN中的生成器，我们给定一个输入噪声和额外信息，之后将两者通过全连接层连接到一起作为隐藏层输入。同样地，在判别器中输入图像和 额外信息也将连接到一起作为隐藏层输入。CGAN的网络架构图如下所示：
 
-![img](D:\workplace\note\12月份\27号-1月2号\Conditional Generative Adversarial Nets_img\image-20220310133205972.png)
+![img](./Conditional%20Generative%20Adversarial%20Nets_img/image-20220310133205972.png)
 
-* 因此CGAN的目标函数可以表示成下面形式：![img](D:\workplace\note\12月份\27号-1月2号\Conditional Generative Adversarial Nets_img\image-20220310133223709.png)
+* 因此CGAN的目标函数可以表示成下面形式：![img](./Conditional%20Generative%20Adversarial%20Nets_img/image-20220310133223709.png)
 
   

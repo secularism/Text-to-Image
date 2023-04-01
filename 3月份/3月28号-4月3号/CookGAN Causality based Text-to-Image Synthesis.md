@@ -21,7 +21,7 @@
 
 ### 1.模型结构：
 
-* ![image-20220330193026482](D:\workplace\note\3月份\3月28号-4月3号\CookGAN Causality based Text-to-Image Synthesis：_img\image-20220330193026482.png)
+* ![image-20220330193026482](./CookGAN%20Causality%20based%20Text-to-Image%20Synthesis%EF%BC%9A_img/image-20220330193026482.png)
 
 * CookGAN包含三对生成器和鉴别器。首先将嵌入的特征$\varphi_r$与高斯分布的随机噪声$Z$进行拼接，将结果输入上采样，上采样时一个多层前馈网络，将受扰动的特征转化为隐藏的图像特征$V_0$。CookGAN最关键的组件时Cooking Simulator（橘黄色区域）。
 
@@ -33,7 +33,7 @@
 
 ### 2. Cooking Simulator：
 
-* ![image-20220330210744451](D:\workplace\note\3月份\3月28号-4月3号\CookGAN Causality based Text-to-Image Synthesis：_img\image-20220330210744451.png)
+* ![image-20220330210744451](./CookGAN%20Causality%20based%20Text-to-Image%20Synthesis%EF%BC%9A_img/image-20220330210744451.png)
 
 * 该组件是模仿真实的烹饪场景，随着时间的推移，不同的切割和烹饪动作会组件施加在食材上。每一个动作都将一些成分转变成新的形式，改变成分、颜色或形状。比如，“胡萝卜”被切成片，“意大利面”与“鱿鱼酱”炒成黑色。接下来的后续操作可以沿着烹饪过程对表单进行附加更改。
 
@@ -51,8 +51,8 @@
 
 ## 实验结果：
 
-* ![image-20220330215153507](D:\workplace\note\3月份\3月28号-4月3号\CookGAN Causality based Text-to-Image Synthesis：_img\image-20220330215153507.png)
-* ![image-20220330215253449](D:\workplace\note\3月份\3月28号-4月3号\CookGAN Causality based Text-to-Image Synthesis：_img\image-20220330215253449.png)
+* ![image-20220330215153507](./CookGAN%20Causality%20based%20Text-to-Image%20Synthesis%EF%BC%9A_img/image-20220330215153507.png)
+* ![image-20220330215253449](./CookGAN%20Causality%20based%20Text-to-Image%20Synthesis%EF%BC%9A_img/image-20220330215253449.png)
 * 可以看到与基线相比，CookGAN的表现明显由于StackGAN++等其他方法。而在图三中可以看出，通过CookGAN模拟得到的图像与真实样本图像的成分组成模式类似，在制作不同食材时，更能模拟菜肴的颜色和纹理分布。
 
 ## 语义解释（Semantic Interpretation）：
@@ -62,7 +62,7 @@
 ### 任务1 Ingredient recognition（成分识别）：
 
 * 成分识别是指对食品图像中的成分进行多重标注。
-* ![image-20220331130803574](D:\workplace\note\3月份\3月28号-4月3号\CookGAN Causality based Text-to-Image Synthesis：_img\image-20220331130803574.png)
+* ![image-20220331130803574](./CookGAN%20Causality%20based%20Text-to-Image%20Synthesis%EF%BC%9A_img/image-20220331130803574.png)
 * 结果基本验证了CookGAN合成的图像与真实图像一样具有可解释性，上图列出了由CookGAN生成的两个示例图像的可识别成分，不仅可以辨认出可见的配料，也可以辨认出不可见的配料。结果与原始图像的结果基本一致。**但受解码器精度的限制，无论是真实图像还是合成图像，都无法区分“鸡肉”、“土豆”等成分。同样，饼干食谱中常见的“鸡蛋”和“小苏打”，在这两种图像中都被错误地检测出来。**
 
 ### 任务2 Image-to-recipe retrieval （I2R 图像到食谱的检索）：
@@ -72,15 +72,15 @@
 ### 任务3 Image-to-image retrieval （I2I 图像到图像的检索）：
 
 * 这个任务是使用生成的图像检索真实的食物图像。结果在实验结果这一节中的表的第四列。下图显示了由CookGAN生成的查询检索到的前5个图像。
-* ![image-20220331132213512](D:\workplace\note\3月份\3月28号-4月3号\CookGAN Causality based Text-to-Image Synthesis：_img\image-20220331132213512.png)
+* ![image-20220331132213512](./CookGAN%20Causality%20based%20Text-to-Image%20Synthesis%EF%BC%9A_img/image-20220331132213512.png)
 * 检索到的图像不仅在视觉上相似，而且在语义上也相似。
 
 ## Content Manipulability（内容可操纵性）：
 
 * CookGAN的一个优点是，可以通过对菜谱的增量操作事实生成图像，比如，通过语义更改配料列表（这点和Control GAN类似）
-* ![image-20220331132524319](D:\workplace\note\3月份\3月28号-4月3号\CookGAN Causality based Text-to-Image Synthesis：_img\image-20220331132524319.png)
+* ![image-20220331132524319](./CookGAN%20Causality%20based%20Text-to-Image%20Synthesis%EF%BC%9A_img/image-20220331132524319.png)
 * 在上图中显示了添加“胡萝卜”，移除“胡萝卜”或使用“生菜”代替“胡罗卜”的例子。在添加的情况下可以看到胡萝卜（或橙色的东西）分布在整道菜中。而去掉胡萝卜，这道菜的橙色就会少很多，而令人印象深刻的是，CookGAN成功地掌握了菜肴中配料的可见性。
-* ![image-20220331132841425](D:\workplace\note\3月份\3月28号-4月3号\CookGAN Causality based Text-to-Image Synthesis：_img\image-20220331132841425.png)
+* ![image-20220331132841425](./CookGAN%20Causality%20based%20Text-to-Image%20Synthesis%EF%BC%9A_img/image-20220331132841425.png)
 * 再上图a）中，添加“糖”，菜的外观没有多大变化，而b）展示了针对食材成分采用不同的烹饪方法所得到的图像，可以看到，鸡蛋的外观因为方法的改变而千差万别。
 
 ## 总结：

@@ -14,11 +14,11 @@
 
 ### 1.目标函数
 
-* ![image-20220225235028621](D:\workplace\note\数字水印论文\笔记\2月份\2月21日-2月27日\StackGAN Text to Photo-realistic Image Synthesis with Stacked Generative Adversarial Networks_img\image-20220225235028621.png)
+* ![image-20220225235028621](./StackGAN%20Text%20to%20Photo-realistic%20Image%20Synthesis%20with%20Stacked%20Generative%20Adversarial%20Networks_img/image-20220225235028621.png)
 
 ### 2.结构
 
-* ![image-20220225235245906](D:\workplace\note\数字水印论文\笔记\2月份\2月21日-2月27日\StackGAN Text to Photo-realistic Image Synthesis with Stacked Generative Adversarial Networks_img\image-20220225235245906.png)
+* ![image-20220225235245906](./StackGAN%20Text%20to%20Photo-realistic%20Image%20Synthesis%20with%20Stacked%20Generative%20Adversarial%20Networks_img/image-20220225235245906.png)
 
 ### 3.条件增强技术（Conditioning Augmentation）
 
@@ -28,12 +28,12 @@
 
 ### 4.Stage-I GAN
 
-* 作者们没有直接根据文本秒速生成高分辨率的图像，而是首先使用Stage-I GAN生成一个低分辨率的图像，它只关注于绘制物体的粗略形状和正确的颜色。损失函数为![image-20220226195039912](D:\workplace\note\数字水印论文\笔记\2月份\2月21日-2月27日\StackGAN Text to Photo-realistic Image Synthesis with Stacked Generative Adversarial Networks_img\image-20220226195039912.png)
+* 作者们没有直接根据文本秒速生成高分辨率的图像，而是首先使用Stage-I GAN生成一个低分辨率的图像，它只关注于绘制物体的粗略形状和正确的颜色。损失函数为![image-20220226195039912](./StackGAN%20Text%20to%20Photo-realistic%20Image%20Synthesis%20with%20Stacked%20Generative%20Adversarial%20Networks_img/image-20220226195039912.png)
 
 ### 5.Stage-II GAN
 
-* 由Stage-I GAN生成的低分辨率图像通常缺乏逼真的物体部分，并可能包含形状扭曲。文本中的一些细节也可能在第一阶段被省略，这对于生成真实感图像至关重要。我们的Stage-II GAN是在Stage-I GAN结果的基础上生成高分辨率图像的。它以低分辨率的图像为条件，并再次嵌入文本，以纠正Stage-I结果中的缺陷。Stage-II GAN完成了以前忽略的文本信息，已生成更逼真的细节。损失函数为![image-20220226195453242](D:\workplace\note\数字水印论文\笔记\2月份\2月21日-2月27日\StackGAN Text to Photo-realistic Image Synthesis with Stacked Generative Adversarial Networks_img\image-20220226195453242.png)
+* 由Stage-I GAN生成的低分辨率图像通常缺乏逼真的物体部分，并可能包含形状扭曲。文本中的一些细节也可能在第一阶段被省略，这对于生成真实感图像至关重要。我们的Stage-II GAN是在Stage-I GAN结果的基础上生成高分辨率图像的。它以低分辨率的图像为条件，并再次嵌入文本，以纠正Stage-I结果中的缺陷。Stage-II GAN完成了以前忽略的文本信息，已生成更逼真的细节。损失函数为![image-20220226195453242](./StackGAN%20Text%20to%20Photo-realistic%20Image%20Synthesis%20with%20Stacked%20Generative%20Adversarial%20Networks_img/image-20220226195453242.png)
 
 ## 实验结果
 
-* ![image-20220226195615952](D:\workplace\note\数字水印论文\笔记\2月份\2月21日-2月27日\StackGAN Text to Photo-realistic Image Synthesis with Stacked Generative Adversarial Networks_img\image-20220226195615952.png)
+* ![image-20220226195615952](./StackGAN%20Text%20to%20Photo-realistic%20Image%20Synthesis%20with%20Stacked%20Generative%20Adversarial%20Networks_img/image-20220226195615952.png)

@@ -25,11 +25,11 @@
 ## Memory Networks：
 
 * Memoty Networks提供了一种新的架构，可以使用显示存储和注意力概念更有效地从记忆中推理答案。Memoty Networks首先将信息写入外部内存，然后根据相关概率从内存插槽读取内容了，在此基础上，16年在ACL提出的Key-value memory Networks通过对键存储和值存储使用不同的编码进行推理，在预测最终答案时，键内存用于推断对应值内存的权重。受此网络的启发，作者们提出了DM-GAN，通过键和值记忆之间的非平凡转换生成高质量的图像。
-* Key-value memory Networks的结构图为：![网络结构](D:\workplace\note\数字水印论文\笔记\3月份\3月14号-3月20号\DM-GAN Dynamic Memory Generative Adversarial Networks for Text-to-Image Synthesis_img\7ae697b045a56df4814da3bfbc993266.png)
+* Key-value memory Networks的结构图为：![网络结构](./DM-GAN%20Dynamic%20Memory%20Generative%20Adversarial%20Networks%20for%20Text-to-Image%20Synthesis_img/7ae697b045a56df4814da3bfbc993266.png)
 
 ## 网络模型：
 
-* ![image-20220316225555954](D:\workplace\note\数字水印论文\笔记\3月份\3月14号-3月20号\DM-GAN Dynamic Memory Generative Adversarial Networks for Text-to-Image Synthesis_img\image-20220316225555954.png)
+* ![image-20220316225555954](./DM-GAN%20Dynamic%20Memory%20Generative%20Adversarial%20Networks%20for%20Text-to-Image%20Synthesis_img/\image-20220316225555954.png)
 * 该模型结构由两个阶段组成：初始图像生成和基于动态内存的图像细化。
   * 在图像生成的初始阶段，首先通过文本编码器将输入的文本描述转换为sentence feature和word feature，然后通过CA模块（流形插值+加入随机噪声）和生成器部分（包括有全连接、上采样），生成图像特征$R_0$，最后由卷积生成初始图像$x_0$，可以看到初始图像的形状较为粗糙，细节较少。
   * 在图像细化阶段：主要是针对初始图像添加更多的细粒度视觉内容，生成真实感的图像特征。这里的细化阶段可以重复多次，图中的$R_{i-1}$为最后阶段的图像特征，并由此生成更细粒度细节的高分辨图像。
@@ -82,7 +82,7 @@
 
 ##  Gated Memory Wiriting（内存写入门）;
 
-* ![image-20220317131229354](D:\workplace\note\数字水印论文\笔记\3月份\3月14号-3月20号\DM-GAN Dynamic Memory Generative Adversarial Networks for Text-to-Image Synthesis_img\image-20220317131229354.png)
+* ![image-20220317131229354](./DM-GAN%20Dynamic%20Memory%20Generative%20Adversarial%20Networks%20for%20Text-to-Image%20Synthesis_img/image-20220317131229354.png)
 
 * 内存写入门允许DM-GAN模型选择相关的单词来细化初始图像，它将最后阶段的图像特征$R_i$与单词特征$W$相结合，计算出单词的重要性
 
@@ -98,13 +98,13 @@
 
 ## Key-Value：
 
-* ![image-20220317133232288](D:\workplace\note\数字水印论文\笔记\3月份\3月14号-3月20号\DM-GAN Dynamic Memory Generative Adversarial Networks for Text-to-Image Synthesis_img\image-20220317133232288.png)
+* ![image-20220317133232288](./DM-GAN%20Dynamic%20Memory%20Generative%20Adversarial%20Networks%20for%20Text-to-Image%20Synthesis_img/image-20220317133232288.png)
 
 * 在理解响应门之前，我们先对这部分做一个解释，当上一步中的内存写入门得到$m$后，其通过dynamic memory得到$\phi_V(m)$和$\phi_K(m)$，从上面我们知道这两个运算都是将内存特征映射到维度$N_r$的值内存访问过程，其中先通过Key Addressing操作，得到$\alpha_{i,j}$得到记忆体$m$和图像$R$之间的相似概率（也就是weight），**这里的相似概率也可以理解为相关性，得到的$\alpha$是多个，其代表每个记忆体和每个图像特征之间的相关性，概率越大，相关性也越强。**再通过Value Reading操作进行加权求和，注意此时得到是多个$o_j$，其中$j$代表的是第j个图像特征。最后再将输出的向量$o$送入到响应门。**这一步的操作其实是参考了Key-value memory Networks论文的做法， 只不过Key-value memory Networks在这一步就完成了一个hop**，在本文中，作者将其改进为继续输出，在最后得到新的图像特征后，才算作是一个hop。
 
 ## Gated Response（响应门）：
 
-* ![image-20220317135917409](D:\workplace\note\数字水印论文\笔记\3月份\3月14号-3月20号\DM-GAN Dynamic Memory Generative Adversarial Networks for Text-to-Image Synthesis_img\image-20220317135917409.png)
+* ![image-20220317135917409](./DM-GAN%20Dynamic%20Memory%20Generative%20Adversarial%20Networks%20for%20Text-to-Image%20Synthesis_img/image-20220317135917409.png)
 
 * 这一步操作的目的就显而易见了——更新图像
 
@@ -116,5 +116,5 @@
 
 ## 实验：
 
-* ![image-20220317141155684](D:\workplace\note\数字水印论文\笔记\3月份\3月14号-3月20号\DM-GAN Dynamic Memory Generative Adversarial Networks for Text-to-Image Synthesis_img\image-20220317141155684.png)
+* ![image-20220317141155684](./DM-GAN%20Dynamic%20Memory%20Generative%20Adversarial%20Networks%20for%20Text-to-Image%20Synthesis_img/image-20220317141155684.png)
 * 值得一提的是，在同一年提出的MirrorGAN，DM-GAN在coco数据集上的效果优于MirrorGAN。

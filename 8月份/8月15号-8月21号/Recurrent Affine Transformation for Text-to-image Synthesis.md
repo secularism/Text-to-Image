@@ -22,4 +22,4 @@
 
 ## RAT-GAN：
 
-- ![image-20220901191803650](D:\workplace\note\8月份\8月15号-8月21号\Recurrent Affine Transformation for Text-to-image Synthesis_img\image-20220901191803650.png)
+- ![image-20220901191803650](./Recurrent%20Affine%20Transformation%20for%20Text-to-image%20Synthesis_img/image-20220901191803650.png)

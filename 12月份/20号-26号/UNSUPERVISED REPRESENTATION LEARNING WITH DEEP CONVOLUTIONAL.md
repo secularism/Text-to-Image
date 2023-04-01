@@ -21,17 +21,17 @@ GENERATIVE ADVERSARIAL NETWORKS
 	- 使用恰当的激活函数
 		- 生成器除去输出层采用Tanh外，全部使用ReLU作为激活函数，判别器所有层都使用LeakyReLU作为激活函数
 	- 上面四点在原文中表现为：
-	![](D:\workplace\note\数字水印论文\笔记\12月份\20号-26号\UNSUPERVISED REPRESENTATION LEARNING WITH DEEP CONVOLUTIONAL_img\image.png)
+	![](./UNSUPERVISED%20REPRESENTATION%20LEARNING%20WITH%20DEEP%20CONVOLUTIONAL_img/image.png)
 
 ## DCGAN的框架结构
 
 - DCGAN中，判别网络接收图像，使用卷积层和池化层对其进行下采样，然后使用全连接分类层将图像分类为真的或假的。生成网络从潜在空间中获取随机噪声向量，然后通过上采样机制进行上采样，最后生成一张图像。隐藏层是用LeakyReLU作为激活函数，并且使用系数介于0.4-0.7的随机失活来避免过拟合。
 - G网络架构图：
 	- 如图所示，输入z是100位的随机数据，服从范围在[-1, 1]的均匀分布。经过一系列的空洞卷积之后，形成一张分辨率为64x64x3的图像的过程。
-	![](D:\workplace\note\数字水印论文\笔记\12月份\20号-26号\UNSUPERVISED REPRESENTATION LEARNING WITH DEEP CONVOLUTIONAL_img\image_1.png)
+	![](./UNSUPERVISED%20REPRESENTATION%20LEARNING%20WITH%20DEEP%20CONVOLUTIONAL_img/image_1.png)
 - D网络架构图：
 	- 判别网络是包含10层（可以添加更多层）的CNN。简单说来，它接收维度为64×64×3的图像，使用2D卷积层对其进行下采样，然后传递给全连接层进行分类。判别网络输出估测，判断给定图像是真是假。输出值为0或1，输出1表示判别网络接收的图像为真，输出0表示该图像为假。
-	![](D:\workplace\note\数字水印论文\笔记\12月份\20号-26号\UNSUPERVISED REPRESENTATION LEARNING WITH DEEP CONVOLUTIONAL_img\image_2.png)
+	![](./UNSUPERVISED%20REPRESENTATION%20LEARNING%20WITH%20DEEP%20CONVOLUTIONAL_img/image_2.png)
 
 ## 实验结果
 
@@ -39,15 +39,15 @@ GENERATIVE ADVERSARIAL NETWORKS
 - 使用GANS作为特征提取器对SVHN数字进行分类
 -  WALKING IN THE LATENT SPACE
 	- 通过使用插值微调噪音输入z 的方式可以导致隐空间结构发生变化从而引导生成图像发生语义上的平滑过度，比如说从有窗户到没窗户，从有电视到没电视等等。
-	![](D:\workplace\note\数字水印论文\笔记\12月份\20号-26号\UNSUPERVISED REPRESENTATION LEARNING WITH DEEP CONVOLUTIONAL_img\image_3.png)
+	![](./UNSUPERVISED%20REPRESENTATION%20LEARNING%20WITH%20DEEP%20CONVOLUTIONAL_img/image_3.png)
 - VISUALIZING THE DISCRIMINATOR FEATURES
 	- 在大型图像数据集上训练的无监督DCGAN也可以学习有趣的特征层次结构。识别器学习的特征会在卧室的典型部分激活，比如床和窗户。为了进行比较，在同一张图中，作者给出了随机初始化的特征的基线，这些特征在语义相关或有趣的情况下不会被激活。
-	![](D:\workplace\note\数字水印论文\笔记\12月份\20号-26号\UNSUPERVISED REPRESENTATION LEARNING WITH DEEP CONVOLUTIONAL_img\image_4.png)
+	![](./UNSUPERVISED%20REPRESENTATION%20LEARNING%20WITH%20DEEP%20CONVOLUTIONAL_img/image_4.png)
 - FORGETTING TO DRAW CERTAIN OBJECTS
 	- 通过标注窗口，并判断激活神经元是否在窗口内的方式来找出影响窗户形成的神经元，将这些神经元的权重设置为0，那么就可以导致生成的图像中没有窗户。从下图可以看到，上面一行图片都是有窗户的，下面一行通过语义遮罩的方式拿掉了窗户，但是空缺的位置依然是平滑连续的，使整幅图像的语义没有发生太大的变化。
 - VECTOR ARITHMETIC ON FACE SAMPLES
 	- 在向量算法中有一个很经典的例子就是【vector("King") - vector("Man") + vector("Woman") = vector("Queue")】，作者将该思想引入到图像生成当中并得到了以下实验结果：【smiling woman - neutral woman + neutral man = smiling man】
-	![](D:\workplace\note\数字水印论文\笔记\12月份\20号-26号\UNSUPERVISED REPRESENTATION LEARNING WITH DEEP CONVOLUTIONAL_img\image_6.png)
+	![](./UNSUPERVISED%20REPRESENTATION%20LEARNING%20WITH%20DEEP%20CONVOLUTIONAL_img/image_6.png)
 
 
 

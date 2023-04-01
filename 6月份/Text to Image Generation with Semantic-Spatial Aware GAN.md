@@ -34,7 +34,7 @@
 
 ## SSA-GAN模型结构：
 
-- ![image-20220630163100900](D:\workplace\note\6月份\Text to Image Generation with Semantic-Spatial Aware GAN_img\image-20220630163100900.png)
+- ![image-20220630163100900](./Text%20to%20Image%20Generation%20with%20Semantic-Spatial%20Aware%20GAN_img/image-20220630163100900.png)
 - 可以看到，SSA-GAN有一个生成器鉴别器对（遵循DFGAN提出的一阶段），该网络的核心元素是语义空间感知卷积网络SSACN，其由语义空间条件批量归一化SSCBN的CBN模块、残差块和掩码预测器组成。
 - SSA-GAN模型遵循DF-GAN中提出的单阶段结构，SSA-GAN具有学习文本表示的文本编码器、具有7个SSACN块的生成器，用于深化文本图像融合过程和提高分辨率，以及用于判断生成的图像是否与给定文本一致的鉴别器。
 
@@ -44,7 +44,7 @@
 
 ### 2. SSACN：
 
-- ![image-20220721101248034](D:\workplace\note\6月份\Text to Image Generation with Semantic-Spatial Aware GAN_img\image-20220721101248034.png)
+- ![image-20220721101248034](./Text%20to%20Image%20Generation%20with%20Semantic-Spatial%20Aware%20GAN_img/image-20220721101248034.png)
 - 如上图所示，它采用编码文本特征向量e和来自最后一个SSACN块的图像特征映射$f_i$作为输入，并输出图像特征$f_i$，且进一步与文本特征融合。其中第一个SSACN块（无上采样）的输入图像特征图的形状为4x4x512，通过使用FC层将噪声矢量z投影到视觉域，然后对其进行整形来实验。因此，经SSACN块6次上采样后，图像特征图具有256x256分辨率。
 - 每个SSACN块由上采样块、掩码预测器、语义空间条件批量归一化（SSCBN）和残差块组成。使用上采样块通过双线性插值操作将图像特征图的宽度和高度加倍。残差块用于保持图像特征的主要内容，以防止文本无关部分被更改，并且图像信息被文本信息淹没。
 
@@ -55,7 +55,7 @@
 
 #### 2.2 Semantic-Spatial Condition Batch Normalization
 
-- ![image-20220726172346531](D:\workplace\note\6月份\Text to Image Generation with Semantic-Spatial Aware GAN_img\image-20220726172346531.png)
+- ![image-20220726172346531](./Text%20to%20Image%20Generation%20with%20Semantic-Spatial%20Aware%20GAN_img/image-20220726172346531.png)
 - 从公式中可以看出，$m_{i,(h,w)}$不仅决定在何处添加文本信息，而且还作为权重来决定在图像特征图上增强多少文本信息。
 - 根据文本信息学习调制参数$\gamma$和$\beta$，预测的掩膜映射在空间上控制仿射变换。因此，为了融合文本和图像特征，实现了语义空间CBN。
 
@@ -63,7 +63,7 @@
 
 - 由于其有效性和简单性，该文采用了DF-GAN中提出的单向鉴别器。
 
-  ![image-20220726235521562](D:\workplace\note\6月份\Text to Image Generation with Semantic-Spatial Aware GAN_img\image-20220726235521562.png)
+  ![image-20220726235521562](./Text%20to%20Image%20Generation%20with%20Semantic-Spatial%20Aware%20GAN_img/image-20220726235521562.png)
 
 - 它将从生成的图像中提取的特征和编码的文本向量连接起来，通过两个卷积层计算对抗损失。它引导生成器合成更真实的图像，具有更好的文本图像语义一致性。
 
@@ -71,8 +71,8 @@
 
 ## 4. 实验：
 
-- ![image-20220803100252795](D:\workplace\note\6月份\Text to Image Generation with Semantic-Spatial Aware GAN_img\image-20220803100252795.png)
+- ![image-20220803100252795](./Text%20to%20Image%20Generation%20with%20Semantic-Spatial%20Aware%20GAN_img/image-20220803100252795.png)
 
-- ![image-20220803100325578](D:\workplace\note\6月份\Text to Image Generation with Semantic-Spatial Aware GAN_img\image-20220803100325578.png)
+- ![image-20220803100325578](./Text%20to%20Image%20Generation%20with%20Semantic-Spatial%20Aware%20GAN_img/image-20220803100325578.png)
 
   

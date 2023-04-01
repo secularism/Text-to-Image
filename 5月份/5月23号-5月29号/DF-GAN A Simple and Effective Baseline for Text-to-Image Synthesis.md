@@ -36,7 +36,7 @@
 
 - DFGAN由一个生成器、一个鉴别器和一个预训练文本编码器组成，如下图所示：
 
-  ![image-20220605163659109](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220605163659109.png)
+  ![image-20220605163659109](./DF-GAN%20A%20Simple%20and%20Effective%20Baseline%20for%20Text-to-Image%20Synthesis_img/image-20220605163659109.png)
 
   可以看到，该模型有两个输入，一个是由文本编码器编码的句子向量，另一个是从高斯分布采样的噪声向量，以确保生成的图像的多样性。先是把噪声向量输入到FC层进行维度的整形，然后应用一系列的UPBlock 对特征进行上采样得到图像特征（UPBlock由上采样、残差块和DFBlock组成，其用于图像生成过程中融合文本和图像特征），最后卷积层将图像特征转换为图像。鉴别器的过程与之相反，采用DownBlock将图像转换为图像特征。然后将句子和特征进行复制连接。然后adversarial loss将会被预测，以用来评估输入的视觉真实性和语义一致性。
 
@@ -50,21 +50,21 @@
 
 #### 2.1  Matching-Aware Gradient Penalty:
 
-- ![image-20220614155630708](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220614155630708.png)
+- ![image-20220614155630708](./DF-GAN%20A%20Simple%20and%20Effective%20Baseline%20for%20Text-to-Image%20Synthesis_img/image-20220614155630708.png)
 - 如上图所示，在无条件图像生成中，目标数据（真实图像）对应于低鉴别器损耗。相应地，合成图像对应于高鉴别器损耗。铰链损耗将鉴别器损耗范围限制在-1和1之间。对真实数据的梯度惩罚将减少真实数据点及其附近的梯度。梯度越大，惩罚越大。
-- ![image-20220615132920361](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615132920361.png)
+- ![image-20220615132920361](./DF-GAN%20A%20Simple%20and%20Effective%20Baseline%20for%20Text-to-Image%20Synthesis_img/image-20220615132920361.png)
 
 #### 2.2 One-Way Output：
 
-- ![image-20220615131327685](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615131327685.png)
+- ![image-20220615131327685](./DF-GAN%20A%20Simple%20and%20Effective%20Baseline%20for%20Text-to-Image%20Synthesis_img/image-20220615131327685.png)
 - 如上图所示，在文本到图像生成中，鉴别器提供四种输入：具有匹配文本的合成图像（fake，match），具有不匹配文本的合成图像（fake，mismatch），具有匹配文本的真实图像（real，match），具有不匹配文本的真实图像（real，mismatch）。
 - **其中无条件损失是指判别图像是真是假，图中用$\beta$表示，有条件是指判别文本和图像是否一致，图中用$\alpha$表示**。我们生成 不匹配文本的合成图像时，当使用Two-Way Output会向$\alpha$和$\beta$的方向进行更新。但是就像图中所表示的一样，Two-Way Output只会简单的将二者相加，这样的过程只会减慢生成器的收敛速度。
 - 因此作者提出One-Way Output。如下图，鉴别器将图像特征和句子向量连接起来，然后通过两个卷积层仅输出一个对抗性损失。通过单向输出，可以使得单个梯度$\gamma$直接指向目标数据点（也就是（real，match））从而优化和加速生成器的收敛。
-- ![image-20220615132948048](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615132948048.png)
+- ![image-20220615132948048](./DF-GAN%20A%20Simple%20and%20Effective%20Baseline%20for%20Text-to-Image%20Synthesis_img/image-20220615132948048.png)
 
 ### 3.Efficient Text-Image Fusion：
 
-- ![image-20220615133217739](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615133217739.png)
+- ![image-20220615133217739](./DF-GAN%20A%20Simple%20and%20Effective%20Baseline%20for%20Text-to-Image%20Synthesis_img/image-20220615133217739.png)
 
 - 其中UPBlock是由上采样、残差块和DFBlock组成，如图(a)。DFBlock如图(b)由Affine模块、ReLu以及卷积组成。Affine模块如图(c)：采用两个MLP分别从句子向量e中去预测通道尺度参数$\gamma$和移位参数$\theta$。
 
@@ -87,5 +87,5 @@
 ## 实验：
 
 - 该实验在CUB和COCO数据上评估模型，选择IS和FID来评估网络性能。因为IS无法在COCO数据集上很好地评估图像质量，且在COCO数据集上，一些基于GAN模型实现的IS显著高于Transformer-based的文本生成图像模型，但合成图像的视觉质量明显低于Transformer-based模型。因此作者不比较COCO数据集上的IS。此外还评估了参数数量（NoP），以比较模型大小与当前方法。
-- ![image-20220615171115375](D:\workplace\note\5月份\5月23号-5月29号\DF-GAN A Simple and Effective Baseline for Text-to-Image Synthesis_img\image-20220615171115375.png)
+- ![image-20220615171115375](./DF-GAN%20A%20Simple%20and%20Effective%20Baseline%20for%20Text-to-Image%20Synthesis_img/image-20220615171115375.png)
 - 可以看出DFGAN的参数数量更少，但是效果更明显

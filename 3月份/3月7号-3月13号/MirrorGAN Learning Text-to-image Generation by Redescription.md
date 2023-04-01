@@ -25,7 +25,7 @@
 
 ## 网络结构：
 
-* ![image-20220312151355648](D:\workplace\note\数字水印论文\笔记\3月份\3月7号-3月13号\MirrorGAN Learning Text-to-image Generation by Redescription_img\image-20220312151355648.png)
+* ![image-20220312151355648](./MirrorGAN%20Learning%20Text-to-image%20Generation%20by%20Redescription_img/image-20220312151355648.png)
 
 * 如上图所示，从左到右依次是STEM、GLAM和STREAM。
 
@@ -37,7 +37,7 @@
 
   * 在GLAM（Global-Local collaborative Attentive Module in Cascaded Image Generators）通过将三个图像生成网络按顺序叠加，构造多级级联生成器，这里采用的是AttnGAN描述的基本结构，因为它在生成真实感图像方面有很好的性能，注意在图中的这部分实质上是有多个图像生成器${G}$，也就是该生成了多个图像，下图这部分重复了多次。
 
-    ![image-20220312154003886](D:\workplace\note\数字水印论文\笔记\3月份\3月7号-3月13号\MirrorGAN Learning Text-to-image Generation by Redescription_img\image-20220312154003886.png)
+    ![image-20220312154003886](./MirrorGAN%20Learning%20Text-to-image%20Generation%20by%20Redescription_img/image-20220312154003886.png)
     * 在数学上，使用${F_0,F_1,...,F_{m-1}}$表示${m}$个视觉特征变压器，${G_0,G_1,...,G_{m-1}}$表示${m}$个图像生成器。每个阶段的视觉特征${f_i}$和生成的图像${I_i}$可以表示为：
 
       > ${f_0=F_0(z,s_{ca})},$
@@ -67,10 +67,10 @@
 
 ## 实验结果：
 
-* ![image-20220312200032067](D:\workplace\note\数字水印论文\笔记\3月份\3月7号-3月13号\MirrorGAN Learning Text-to-image Generation by Redescription_img\image-20220312200032067.png)
+* ![image-20220312200032067](./MirrorGAN%20Learning%20Text-to-image%20Generation%20by%20Redescription_img/image-20220312200032067.png)
 
 * 从上图可以看出MirrorGAN所生成的图像比起AttnGAN来说更接近真实图像
 
-* 在CUB和COCO数据集上：![image-20220312200156526](D:\workplace\note\数字水印论文\笔记\3月份\3月7号-3月13号\MirrorGAN Learning Text-to-image Generation by Redescription_img\image-20220312200156526.png)
+* 在CUB和COCO数据集上：![image-20220312200156526](./MirrorGAN%20Learning%20Text-to-image%20Generation%20by%20Redescription_img/image-20220312200156526.png)
 
   

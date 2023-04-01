@@ -7,7 +7,7 @@
 ## 提出该网络的目标任务：
 
 * 论文的目标是在语义上编辑图像的部分，以匹配描述所需属性（比如，纹理、颜色和背景）的给定文本，同时保留与文本无关的其他内容。目前来说，现最先进的文本引导图像处理方法只能产生低质量的图像（下图第一行），效果不理想（下图第二行），甚至不能有效地处理复杂场景，要在文本描述的指导下对图像进行有效的处理，关键是同时利用文本和图像的跨模态信息，生成与给定文本匹配的新属性，同时保留与文本无关的原始图像内容。
-* ![image-20220408105857810](D:\workplace\note\4月份\4月4号-4月10号\ManiGAN Text-Guided Image Manipulation_img\image-20220408105857810.png)
+* ![image-20220408105857810](./ManiGAN%20Text-Guided%20Image%20Manipulation_img/image-20220408105857810.png)
 
 ## 现阶段其他方法的弊端：
 
@@ -22,7 +22,7 @@
 
 ### 模型结构：
 
-* ![image-20220409155113392](D:\workplace\note\4月份\4月4号-4月10号\ManiGAN Text-Guided Image Manipulation_img\image-20220409155113392.png)
+* ![image-20220409155113392](./ManiGAN%20Text-Guided%20Image%20Manipulation_img/image-20220409155113392.png)
 * 该模型通过给定输入图像$I$和用户提高的文本描述$S^`$，模型的目标是生成一个经过操作的图像$I^`$，该图像$I^`$与$S^`$语义对齐，同时保留$I$存在的与文本无关的内容。（上图是简略后的模型图）
 * ManiGAN使用多级ControlGAN架构作为基本框架，在输入部分与ControlGAN不同的地方是增加了图像编码器，它是一个预先训练的Inception-v3网络，用于提取区域图像表示$v$。在每一个阶段，text feature通过卷积层进行细化，生成隐藏特征$h$，然后，通过ACM模块进一步将$h$与原始图像特征$v$相结合，以便有效地选择与给定文本对应的图像区域，然后将这些区域与文本信息关联起来进行精确的操作。同时对原始图像表示进行编码，实现稳定重建。整个框架以更高的分辨率和更高的质量逐渐生成与给定文本描述匹配的新的视觉属性，并以更细的尺度重建输入图像中存在的与文本无关的内容。最后，利用所提出的细节校正模块(DCM)来校正不合适的属性，并补全缺失的细节。
 
@@ -30,7 +30,7 @@
 
 * 作者指出现有的结合textimage跨模态表示的连接方案不能有效地定位需要修改的区域，因此无法实现细粒度的图像操作。因此提出一个简单的文本-图像仿射组合模块来融合文本跨模态表示。
 
-* ![image-20220409161626809](D:\workplace\note\4月份\4月4号-4月10号\ManiGAN Text-Guided Image Manipulation_img\image-20220409161626809.png)
+* ![image-20220409161626809](./ManiGAN%20Text-Guided%20Image%20Manipulation_img/image-20220409161626809.png)
 
 * 该模块有两个输入（1）来自文本或者两个阶段之间的隐藏表示 hidden feature $h$ （2）区域图像特征$v$，然后对$v$做上采样，然后进一步使用两个卷积层进行处理，得到与$h$大小相同的$W(v)$和$b(v)$，最后，通过融合两种模态表示得到$h^`$。
 
@@ -40,15 +40,15 @@
 
 ### Detail Correction Module（DAM）：
 
-* ![image-20220409165301647](D:\workplace\note\4月份\4月4号-4月10号\ManiGAN Text-Guided Image Manipulation_img\image-20220409165301647.png)
+* ![image-20220409165301647](./ManiGAN%20Text-Guided%20Image%20Manipulation_img/image-20220409165301647.png)
 * 该模块有三个输入（1）来自最后一个ACM模块的隐藏feature $h_{last}$，（2）由预训练RNN编码的单词特征word feature，其中每个单词与一个特征向量相关联。（3）从输入图像$I$中提取的视觉特征$v^`$。
 * 首先，通过ControlGAN中引入的空间注意和通道注意生成空间和通道注意特征$s$和$c$，再进一步将细粒度的词级表示整合到隐藏特征$h_{last}$中，生成中间特征$a$。**特征$a$可以进一步帮助模型细化与给定文本相关的视觉属性，有助于更准确和有效地修改与给定描述对应的内容。**其次，利用预训练的VGG网络的relu2_2层得到的特征通过上采样使其与$a$的大小相同，表示为$\overline{v}^`$。之后利用ACM模块融合$a$和$\overline{v}^`$，得到$\overline{a}$。最后，采用用两个残差块(细节在补充材料中)细化图像得到$I^`$。
 
 ## 实验：
 
-* ![image-20220409171154337](D:\workplace\note\4月份\4月4号-4月10号\ManiGAN Text-Guided Image Manipulation_img\image-20220409171154337.png)
-* ![image-20220409171212658](D:\workplace\note\4月份\4月4号-4月10号\ManiGAN Text-Guided Image Manipulation_img\image-20220409171212658.png)
-* ![image-20220409171219969](D:\workplace\note\4月份\4月4号-4月10号\ManiGAN Text-Guided Image Manipulation_img\image-20220409171219969.png)
+* ![image-20220409171154337](./ManiGAN%20Text-Guided%20Image%20Manipulation_img/image-20220409171154337.png)
+* ![image-20220409171212658](./ManiGAN%20Text-Guided%20Image%20Manipulation_img/image-20220409171212658.png)
+* ![image-20220409171219969](./ManiGAN%20Text-Guided%20Image%20Manipulation_img/image-20220409171219969.png)
 
 ## Manipulative precision metric：
 

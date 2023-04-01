@@ -7,7 +7,7 @@
 ## 为什么提出ControlGAN：
 
 * 由于GAN在生成真实感图像方面的成功，文本到图像的生成在实现条件生成网络（Conditional GAN）的基础上取得了显著的进展。然而，**目前的生成网络一般是不可控的**，这意味着如果用户改变句子中的某些词，合成的图像就会与原始文本生成的图像有很大的不同，如下图所示;
-* ![image-20220326172012635](D:\workplace\note\3月份\3月21号-3月27号\Controllable Text-to-Image Generation_img\image-20220326172012635.png)
+* ![image-20220326172012635](./Controllable%20Text-to-Image%20Generation_img/image-20220326172012635.png)
 * 在这里。当给定的文本描述(如颜色)发生变化时，鸟的相应视觉属性会被修改，但其他不相关的属性(如姿势和位置)也会发生变化。而在真实的应用程序中，当用户希望进一步修改合成图像以满足自己的偏好时，通常不希望出现这种情况。
 * 因此该文的目标是**从文本生成图像，并允许用户在一个框架中使用自然语言描述来操作合成图像。特别是，我们专注于通过改变给定的文本描述来修改生成图像中对象的视觉属性(例如，类别、纹理和颜色)。**为此，提出了一种新型的可控文本-图像生成网络——ControlGAN。该网络既可以合成高质量的图像，又允许用户在不影响其他内容生成的情况下操纵对象的属性。
 
@@ -31,14 +31,14 @@
 
 ### 2.结构：
 
-* ![image-20220326174320382](D:\workplace\note\3月份\3月21号-3月27号\Controllable Text-to-Image Generation_img\image-20220326174320382.png)
+* ![image-20220326174320382](./Controllable%20Text-to-Image%20Generation_img/image-20220326174320382.png)
 * 该网络的目标是合成一个在语义上与$S$一致的真实图像$I$，并且使得这个生成过程可控。也就是说如果将$S$修改为$S_m$，则合成的结果在语义上与$S_m$匹配，同时保留$I$中存在的不相关内容。
 * 可以看出，在输入端和之前的网络类似，给出一个$S$，通过Text Encoder——一个预先训练的双向RNN，将句子编码成sentence feature（ $s \in R^D$，$D$维度是描述整个句子）和word feature（$w \in R^{D \times L}$，$L$是单词的数量），然后将$s$通过CA模块得到$\tilde{s}$，然后与随机向量$z$连接，作为第一阶段的输入。整体框架在多个阶段生成从粗到细的图像，在每个阶段，**网络生成一个隐藏的视觉特征$v_i$，它是输入到相应的生成器$G_i$，以产生合成图像。可以看到spatial attention（空间注意力机制）和channel-wiseattention（通道式注意模块）以$w$和$v_i$为输入，输出的是注意的词-上下文特征。然后这些值得注意的特征将进一步与隐藏的特征$v_i$连接在一起，作为下一阶段的输入。
 * 值得一说的是，在AttnGAN中也采用了spatial attention，但是在没有channel-wise attention的情况下，spatial attention只能将单词与单个空间位置关联起来。因此引入channel-wise attention来开发单词和通道之间的联系。这样的做法发现，channel方向的注意模块将语义意义部分与相应的词高度相关，而spatial方向的注意模块则将注意力集中在颜色描述上。因此，二者一起可以帮助生成器解开不同的视觉属性，并允许它只关注最相关的子区域和通道。
 
 ### 2.1 Channel-Wise Attention：
 
-* ![image-20220326193843956](D:\workplace\note\3月份\3月21号-3月27号\Controllable Text-to-Image Generation_img\image-20220326193843956.png)
+* ![image-20220326193843956](./Controllable%20Text-to-Image%20Generation_img/image-20220326193843956.png)
 
 * 在第$k$个阶段，将$w$和$v_k$进行输入（图中的$H_k$和$W_k$代表第$k$阶段map feature的高度和宽度），词特征$w$先通过感知层$F_k$映射到与$v_k$相同的语义空间中得到$\tilde{w_k}$，然后通过矩阵乘法（MatMul）将两者进行结合得到$m^k$，这样的一来，**$m^k$聚集了所有空间位置上的通道与字之间的相关值**，再将其通过softmax层后与词特征的转置进行相乘得到最后的结果$f_k^a$，$f_k^a$中的每个通道都是一个动态的表示，通过单词与视觉特征中对应通道之间的相关性加权得到。**这样一来，相关值高的通道对对应的词的响应就会高，这样既可以将词的属性分解到不同的通道中，又可以通过赋予较低的相关性来减少不相关通道的影响。**在图中$a^k$的公式为：
 
@@ -48,7 +48,7 @@
 
 ### 2.2 Word-Level Discriminator：
 
-* ![image-20220326195204649](D:\workplace\note\3月份\3月21号-3月27号\Controllable Text-to-Image Generation_img\image-20220326195204649.png)
+* ![image-20220326195204649](./Controllable%20Text-to-Image%20Generation_img/image-20220326195204649.png)
 
 * Word-Level Discriminator也是有两个输入：1）word feature $w$，这里的$w^`$从Text Encoder编码得来，$w$和$w^`$分别表示从原始text $S$编码得到的单词特征和随机采样的不匹配文本。2）视觉特征$n_{real}$、$n_{fake}$，它们都是通过基于GoogleNet图像编码器从真实图像$I$和生成的图像$I^`$编码得来的。（文中为了简化，将$w$和$w^`$统一表示为$w$，$n_{real}$、$n_{fake}$统一表示为$n$）。图中的左侧操作与channel-wise attention的处理大致相同，其中$\beta_{i,j}$表示第$i$个单词与图像的第$j^{th}$子区域的相关值。最后得到的$b$称为图像的子区域感知的词特征，它集合了所有空间信息，其权重由词上下文相关矩阵$\beta$加权。
 
@@ -72,7 +72,7 @@
 
 ### spatial attention：
 
-* ![image-20220326203744871](D:\workplace\note\3月份\3月21号-3月27号\Controllable Text-to-Image Generation_img\image-20220326203744871.png)
+* ![image-20220326203744871](./Controllable%20Text-to-Image%20Generation_img/image-20220326203744871.png)
 * 简而言之就是将所有的通道进行求和，然后reshape, softmax, reshape获得注意力矩阵。
 
 
